@@ -7,14 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationServices.Core", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationAssistant.Business", "TranslationAssistant.Business\TranslationAssistant.Business.csproj", "{6BF8556D-3875-4C4A-86B4-A9AA5B1F8696}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentTranslator", "TranslationAssistant.DocumentTranslationInterface\DocumentTranslator.csproj", "{4007B1E0-9E4F-449A-AE61-C38F771001F6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationAssistant.AutomationToolkit.BasePlugin", "TranslationAssistant.AutomationToolkit.BasePlugin\TranslationAssistant.AutomationToolkit.BasePlugin.csproj", "{443BE96F-82E7-4952-A078-DEBCFF6B2311}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationAssistant.AutomationToolkit", "TranslationAssistant.AutomationToolkit\TranslationAssistant.AutomationToolkit.csproj", "{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslationAssistant.AutomationToolkit.TranslationPlugins", "TranslationAssistant.AutomationToolkit.TranslationPlugins\TranslationAssistant.AutomationToolkit.TranslationPlugins.csproj", "{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{02078B99-A235-40FD-B8C3-67060FCACC93}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -62,46 +54,6 @@ Global
 		{6BF8556D-3875-4C4A-86B4-A9AA5B1F8696}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{6BF8556D-3875-4C4A-86B4-A9AA5B1F8696}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{6BF8556D-3875-4C4A-86B4-A9AA5B1F8696}.Release|x86.ActiveCfg = Release|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{4007B1E0-9E4F-449A-AE61-C38F771001F6}.Release|x86.ActiveCfg = Release|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Release|Any CPU.Build.0 = Release|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{443BE96F-82E7-4952-A078-DEBCFF6B2311}.Release|x86.ActiveCfg = Release|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{BFDA5135-46E4-49C2-ADCF-371F7EA6EF14}.Release|x86.ActiveCfg = Release|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{5CBC6852-6F8F-4BD1-85A8-7D4629674ABA}.Release|x86.ActiveCfg = Release|Any CPU
 		{1E89FBEE-7C28-41F8-8894-1B11D4855A26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E89FBEE-7C28-41F8-8894-1B11D4855A26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E89FBEE-7C28-41F8-8894-1B11D4855A26}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -129,7 +81,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {D90F6C56-D340-4CF4-8499-534F5BD94FFC}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45;packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
+		SolutionGuid = {D90F6C56-D340-4CF4-8499-534F5BD94FFC}
 	EndGlobalSection
 EndGlobal

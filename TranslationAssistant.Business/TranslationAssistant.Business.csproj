@@ -88,10 +88,6 @@
     <Compile Include="XMLTranslationManager.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TranslationAssistant.AutomationToolkit.BasePlugin\TranslationAssistant.AutomationToolkit.BasePlugin.csproj">
-      <Project>{443be96f-82e7-4952-a078-debcff6b2311}</Project>
-      <Name>TranslationAssistant.AutomationToolkit.BasePlugin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\TranslationServices.Core\TranslationServices.Core.csproj">
       <Project>{9f027538-f794-4543-a510-155043a40cc6}</Project>
       <Name>TranslationServices.Core</Name>
