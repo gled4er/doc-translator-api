@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentTranslator.Tmx", "D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.csproj", "{8D502D94-801A-4E0C-A26A-44E740C0EEEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftGraph", "MicrosoftGraph\MicrosoftGraph.csproj", "{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -76,6 +78,18 @@ Global
 		{8D502D94-801A-4E0C-A26A-44E740C0EEEE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8D502D94-801A-4E0C-A26A-44E740C0EEEE}.Release|x86.ActiveCfg = Release|Any CPU
 		{8D502D94-801A-4E0C-A26A-44E740C0EEEE}.Release|x86.Build.0 = Release|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Debug|x86.Build.0 = Debug|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|x86.ActiveCfg = Release|Any CPU
+		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

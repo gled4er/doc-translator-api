@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.WindowsAzure.Storage;
@@ -18,7 +17,6 @@ namespace TestApp
         {
             SaveFile("documents", "AI05.pptx", "Japanese", "English");
         }
-
 
         public static void SaveFile(string containerName, string fileName, string originalLanguage, string translationLanguage)
         {
@@ -115,7 +113,6 @@ namespace TestApp
             using (var memoryStream = new MemoryStream())
             {
                 blockBlob.DownloadToStream(memoryStream);
-                Microsoft.SharePoint.Client.File uploadFile;
 
                 using (ClientContext clientContext = new ClientContext(ConfigurationManager.AppSettings["SPSiteUrl"]))
                 {
