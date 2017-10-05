@@ -19,8 +19,9 @@ namespace TestApp
             containerBuilder.Register<ILoggingService>(b => new LoggingService());
             containerBuilder.Register<IConfigurationService>(b => new ConfigurationService(b.Resolve<ILoggingService>()));
             containerBuilder.Register<IStorageManagementService>(b=>new StorageManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<ISharePointManagementService>(b => new SharePointManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IHttpService>(b => new HttpService(b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IDocumentManagementService>(b=> new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IDocumentManagementService>(b=> new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<ISharePointManagementService>(), b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IOutlookService>(b => new OutlookService(b.Resolve<IHttpService>(), b.Resolve<ITokenService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<ITokenService>(b => new TokenService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IRoomService>(b => new RoomService(b.Resolve<IOutlookService>(), b.Resolve<ILoggingService>()));
