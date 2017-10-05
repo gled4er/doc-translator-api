@@ -8,6 +8,7 @@ using Microsoft.SharePoint.Client;
 using System.Security;
 using TranslationAssistant.TranslationServices.Core;
 using TranslationAssistant.Business;
+using TestApp.Authentication;
 
 namespace TestApp
 {
@@ -15,10 +16,23 @@ namespace TestApp
     {
         static void Main(string[] args)
         {
-            SaveFile("documents", "AI05.pptx", "Japanese", "English");
+          
+            // Authenticate 
+            var userToken =  AuthenticationHelper.GetTokenForUser(ConfigurationManager.AppSettings["AADTenant"], ConfigurationManager.AppSettings["AADAppClientID"]).Result;
+            // Find People by name
+
+            // Provide Meeting Slots options by date
+
+            // Select meeting slot and room
+
+            // Get document links
+            var documentLinks = TranslateFile("documents", "AI05.pptx", "Japanese", "English");
+
+            // Schedule meeting 
+
         }
 
-        public static void SaveFile(string containerName, string fileName, string originalLanguage, string translationLanguage)
+        public static DocumentLinks TranslateFile(string containerName, string fileName, string originalLanguage, string translationLanguage)
         {
             var storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
             var blobClient = storageAccount.CreateCloudBlobClient();
@@ -56,6 +70,12 @@ namespace TestApp
             {
                 System.IO.File.Delete(translatedDocumentName);
             }
+
+            return new DocumentLinks
+            {
+                OriginalDocument = originalFileUrl,
+                TranslatedDocument = translatedFileUrl
+            };
         }
 
         public static string GetExtension(string fileName)
@@ -102,39 +122,6 @@ namespace TestApp
             return string.Empty;
         }
 
-        public static void MoveTranslatedDocumentToSharePoint(string containerName, string fileName)
-        {
-            var storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
-            var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(containerName);
-            container.CreateIfNotExists();
-            var blockBlob = container.GetBlockBlobReference(fileName);
-
-            using (var memoryStream = new MemoryStream())
-            {
-                blockBlob.DownloadToStream(memoryStream);
-
-                using (ClientContext clientContext = new ClientContext(ConfigurationManager.AppSettings["SPSiteUrl"]))
-                {
-                    var passWord = new SecureString();
-
-                    foreach (char c in ConfigurationManager.AppSettings["SPPassword"].ToCharArray()) passWord.AppendChar(c);
-
-                    clientContext.Credentials = new SharePointOnlineCredentials(ConfigurationManager.AppSettings["SPUserName"], passWord);
-
-                    Web web = clientContext.Web;
-
-                    clientContext.Load(web);
-
-                    clientContext.ExecuteQuery();
-
-                    SaveBinaryDirect(clientContext, "Documents", blockBlob.Name, memoryStream);
-
-                    Console.ReadLine();
-                }
-            }
-        }
-
         public static void SaveBinaryDirect(ClientContext ctx, string libraryName, string fileName, Stream memoryStream)
         {
             Web web = ctx.Web;
@@ -177,5 +164,11 @@ namespace TestApp
             List list = web.Lists.Add(creationInfo);
             ctx.ExecuteQuery();
         }
+    }
+
+    public class DocumentLinks
+    {
+        public string OriginalDocument { get; set; }
+        public string TranslatedDocument { get; set; }
     }
 }
