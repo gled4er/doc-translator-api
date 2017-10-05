@@ -61,7 +61,6 @@ namespace TestApp
                 var meetingScheduleSuggestions = DataConverter.GetMeetingScheduleSuggestions(meetingTimeSuggestion, roomsDictionary);
 
                 // Select meeting slot and room
-
                 var fileName = "AI05.pptx";
 
                 var randomNumberGenerator = new Random();
@@ -72,7 +71,7 @@ namespace TestApp
 
                 // Get document links
                 var documentManagementService = scope.Resolve<IDocumentManagementService>();
-                var documentLinks = documentManagementService.TranslateFile("documents", "AI05.pptx", "Japanese", "English").Result;
+                var documentLinks = documentManagementService.TranslateFile("documents", fileName, "Japanese", "English").Result;
 
                 // Schedule meeting 
                 var meeting = DataConverter.GetEvent(room, emails.ToArray(), $"Discussion for document {fileName}", slot.StartTime, slot.EndTime, documentLinks.OriginalDocument, documentLinks.TranslatedDocument);

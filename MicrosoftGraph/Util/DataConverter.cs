@@ -241,9 +241,14 @@ namespace MicrosoftGraph.Util
             var stringBuilder = new StringBuilder();
             stringBuilder.Append("<html>");
             stringBuilder.Append("<body>");
-            stringBuilder.AppendLine(string.Format("Original document can be found <a href=\"{0}\">here</a>", originalDocumentLink));
+            stringBuilder.AppendLine("Hello All,");
             stringBuilder.AppendLine("<br/>");
-            stringBuilder.AppendLine(string.Format("Translated document can be found <a href=\"{0}\">here</a>", translatedDocumentLink));
+            stringBuilder.AppendLine("We will have a meeting to discuss a document. Please find more details below.");
+            stringBuilder.AppendLine("<br/>");
+            stringBuilder.AppendLine(string.Format("The original document can be found <a href=\"{0}\">here</a>,", originalDocumentLink));
+            stringBuilder.AppendLine(string.Format("and the translated document can be found <a href=\"{0}\">here</a>.", translatedDocumentLink));
+            stringBuilder.AppendLine("<br/>");
+            stringBuilder.AppendLine("Thank you!");
             stringBuilder.AppendLine("<br/>");
             stringBuilder.Append("</body>");
             stringBuilder.Append("</html>");
