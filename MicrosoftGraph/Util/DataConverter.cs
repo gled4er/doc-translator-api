@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using MicrosoftGraph.Model;
 
-namespace SampleAADv2Bot.Util
+namespace MicrosoftGraph.Util
 {
     /// <summary>
     /// Data Converter helper class 

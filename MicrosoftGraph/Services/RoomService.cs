@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Graph;
 using MicrosoftGraph.Model;
+using Newtonsoft.Json;
 
 namespace MicrosoftGraph.Services
 {
@@ -13,30 +14,32 @@ namespace MicrosoftGraph.Services
     [Serializable]
     public class RoomService : IRoomService
     {
-        private readonly IOutlookService _outlookService;
+        private readonly IHttpService _httpService;
         private readonly ILoggingService _loggingService;
 
         /// <summary>
         /// Room service constructor
         /// </summary>
-        /// <param name="outlookService">Instance of <see cref="IOutlookService"/></param>
         /// <param name="loggingService">Instance of <see cref="ILoggingService"/></param>
-        public RoomService(IOutlookService outlookService, ILoggingService loggingService)
+        /// <param name="httpService">Instance of <see cref="IHttpService"/></param>
+        public RoomService(IHttpService httpService, ILoggingService loggingService)
         {
-            _outlookService = outlookService;
+            _httpService = httpService;
             _loggingService = loggingService;
         }
 
         /// <summary>
         /// Get all rooms 
         /// </summary>
+        /// <param name="accessToken">User Acces Token</param>
         /// <returns>List of all rooms</returns>
-        public async Task<List<Room>> GetRooms(AutoAuthConfiguration autoAuthConfiguration)
+        public async Task<List<Room>> GetRooms(string accessToken)
         {
             try
             {
-                var rooms = await _outlookService.GetRooms(autoAuthConfiguration);
-                return rooms;
+                var httpResponseMessage = await _httpService.AuthenticatedGet("https://graph.microsoft.com/beta/me/findrooms", accessToken);
+                var roomSearchResponse = JsonConvert.DeserializeObject<RoomsListResponse>(await httpResponseMessage.Content.ReadAsStringAsync());
+                return roomSearchResponse != null ? roomSearchResponse.Value : new List<Room>();
             }
             catch(Exception ex)
             {

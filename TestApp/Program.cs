@@ -1,7 +1,9 @@
-﻿using TestApp.Authentication;
+﻿using System;
+using TestApp.Authentication;
 using TestApp.DocumentManagement.Services;
 using Autofac;
 using MicrosoftGraph.Services;
+using MicrosoftGraph.Util;
 
 namespace TestApp
 {
@@ -22,11 +24,9 @@ namespace TestApp
             containerBuilder.Register<ISharePointManagementService>(b => new SharePointManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IHttpService>(b => new HttpService(b.Resolve<ILoggingService>()));
             containerBuilder.Register<IDocumentManagementService>(b=> new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<ISharePointManagementService>(), b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IOutlookService>(b => new OutlookService(b.Resolve<IHttpService>(), b.Resolve<ITokenService>(), b.Resolve<ILoggingService>()));
-            containerBuilder.Register<ITokenService>(b => new TokenService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IRoomService>(b => new RoomService(b.Resolve<IOutlookService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IRoomService>(b => new RoomService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IGroupService>(b => new GroupService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IMeetingService>(b => new MeetingService(b.Resolve<IHttpService>(), b.Resolve<IOutlookService>(), b.Resolve<IRoomService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IMeetingService>(b => new MeetingService(b.Resolve<IHttpService>(), b.Resolve<IRoomService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IPeopleService>(b => new PeopleService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IEmailService>(b => new EmailService(b.Resolve<IGroupService>(), b.Resolve<IPeopleService>(), b.Resolve<ILoggingService>()));
             Container = containerBuilder.Build();
@@ -44,10 +44,18 @@ namespace TestApp
                 var emailService = scope.Resolve<IEmailService>();
 
                 // using distributions list
-                // var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com,dl-leaders@smdocs.onmicrosoft.com", userAccessToken).Result;
                 var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com", userAccessToken).Result;
 
                 // Provide Meeting Slots options by date
+
+                var meetingService = scope.Resolve<IMeetingService>();
+
+                var meetingDuration = "30";
+                var date = DateTime.Now.AddDays(5);
+
+                //var userFindMeetingTimesRequestBody = DataConverter.GetUserFindMeetingTimesRequestBody(date, emails.ToArray(), DataConverter.GetDurationInMinutesInt(meetingDuration), false);
+                //var meetingTimeSuggestion = meetingService.GetMeetingsTimeSuggestions(userAccessToken, userFindMeetingTimesRequestBody, null).Result;
+                //var meetingScheduleSuggestions = new List<MeetingSchedule>();
 
                 // Select meeting slot and room
 

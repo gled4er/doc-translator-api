@@ -17,21 +17,19 @@ namespace MicrosoftGraph.Services
         private readonly IRoomService _roomService;
         private readonly IHttpService _httpService;
         private readonly ILoggingService _loggingService;
-        private readonly IOutlookService _outlookService;
 
         /// <summary>
         /// Meeting Service Constructor
         /// </summary>
         /// <param name="httpService">HTTP Service instance</param>
-        /// <param name="outlookService">Outlook Service</param>
+        // /// <param name="outlookService">Outlook Service</param>
         /// <param name="roomService">Room Service instance</param>
         /// <param name="loggingService">Logging Service</param>
-        public MeetingService(IHttpService httpService, IOutlookService outlookService, IRoomService roomService, ILoggingService loggingService)
+        public MeetingService(IHttpService httpService, IRoomService roomService, ILoggingService loggingService)
         {
             _roomService = roomService;
             _httpService = httpService;
             _loggingService = loggingService;
-            _outlookService = outlookService;
         }
 
         /// <summary>
@@ -40,11 +38,11 @@ namespace MicrosoftGraph.Services
         /// <param name="accessToken">Access Token for API</param>
         /// <param name="userFindMeetingTimesRequestBody">Request object for calling Find Meeting Times API</param>
         /// <returns>Task of <see cref="MeetingTimeSuggestionsResult"/></returns>
-        public async Task<MeetingTimeSuggestionsResult> GetMeetingsTimeSuggestions(string accessToken, UserFindMeetingTimesRequestBody userFindMeetingTimesRequestBody, Model.AutoAuthConfiguration autoAuthConfiguration)
+        public async Task<MeetingTimeSuggestionsResult> GetMeetingsTimeSuggestions(string accessToken, UserFindMeetingTimesRequestBody userFindMeetingTimesRequestBody)
         {
             try
             {
-                var rooms =  await _roomService.GetRooms(autoAuthConfiguration);
+                var rooms =  await _roomService.GetRooms(accessToken);
                 _roomService.AddRooms(userFindMeetingTimesRequestBody, rooms);
                 var httpResponseMessage = await _httpService.AuthenticatedPost(FindsMeetingTimeEndpoint, accessToken, userFindMeetingTimesRequestBody, string.Empty);
                 var meetingTimeSuggestionsResult = JsonConvert.DeserializeObject<MeetingTimeSuggestionsResult>(await httpResponseMessage.Content.ReadAsStringAsync());
@@ -72,24 +70,6 @@ namespace MicrosoftGraph.Services
                 var scheduledMeeting =
                     JsonConvert.DeserializeObject<Event>(await httpResponseMessage.Content.ReadAsStringAsync());
                 return scheduledMeeting;
-            }
-            catch (Exception ex)
-            {
-                _loggingService.Error(ex);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Schedule meeting via Outlook API
-        /// </summary>
-        /// <param name="meeting">Instance of <see cref="Microsoft.Office365.OutlookServices.Event"/></param>
-        /// <returns>Task</returns>
-        public async Task ScheduleOutlokMeeting(Office.Event meeting, string organizerEmail, string organizerName, Model.AutoAuthConfiguration autoAuthConfiguration)
-        {
-            try
-            {
-                await _outlookService.ScheduleEvent(meeting, organizerEmail, organizerName, autoAuthConfiguration);
             }
             catch (Exception ex)
             {

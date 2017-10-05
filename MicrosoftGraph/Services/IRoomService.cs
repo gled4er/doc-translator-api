@@ -14,7 +14,7 @@ namespace MicrosoftGraph.Services
         /// Get rooms
         /// </summary>
         /// <returns>Task for list of <see cref="Room"/></returns>
-        Task<List<Room>> GetRooms(AutoAuthConfiguration autoAuthConfiguration);
+        Task<List<Room>> GetRooms(string accessToken);
 
         /// <summary>
         /// Add rooms
