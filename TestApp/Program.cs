@@ -47,23 +47,36 @@ namespace TestApp
                 var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com", userAccessToken).Result;
 
                 // Provide Meeting Slots options by date
+                var roomsService = scope.Resolve<IRoomService>();
+
+                var rooms = roomsService.GetRooms(userAccessToken).Result;
+                var roomsDictionary = DataConverter.GetRoomDictionary(rooms);
 
                 var meetingService = scope.Resolve<IMeetingService>();
-
-                var meetingDuration = "30";
+                var meetingDuration = 30;
                 var date = DateTime.Now.AddDays(5);
 
-                //var userFindMeetingTimesRequestBody = DataConverter.GetUserFindMeetingTimesRequestBody(date, emails.ToArray(), DataConverter.GetDurationInMinutesInt(meetingDuration), false);
-                //var meetingTimeSuggestion = meetingService.GetMeetingsTimeSuggestions(userAccessToken, userFindMeetingTimesRequestBody, null).Result;
-                //var meetingScheduleSuggestions = new List<MeetingSchedule>();
+                var userFindMeetingTimesRequestBody = DataConverter.GetUserFindMeetingTimesRequestBody(date, emails.ToArray(), normalizedDuration: meetingDuration, isOrganizerOptional: false);
+                var meetingTimeSuggestion = meetingService.GetMeetingsTimeSuggestions(userAccessToken, userFindMeetingTimesRequestBody).Result;
+                var meetingScheduleSuggestions = DataConverter.GetMeetingScheduleSuggestions(meetingTimeSuggestion, roomsDictionary);
 
                 // Select meeting slot and room
+
+                var fileName = "AI05.pptx";
+
+                var randomNumberGenerator = new Random();
+                var slotIndex = randomNumberGenerator.Next(meetingScheduleSuggestions.Count);
+                var slot = meetingScheduleSuggestions[slotIndex];
+                var roomIndex = randomNumberGenerator.Next(meetingScheduleSuggestions[slotIndex].Rooms.Count);
+                var room = slot.Rooms[roomIndex];
 
                 // Get document links
                 var documentManagementService = scope.Resolve<IDocumentManagementService>();
                 var documentLinks = documentManagementService.TranslateFile("documents", "AI05.pptx", "Japanese", "English").Result;
 
                 // Schedule meeting 
+                var meeting = DataConverter.GetEvent(room, emails.ToArray(), $"Discussion for document {fileName}", slot.StartTime, slot.EndTime, documentLinks.OriginalDocument, documentLinks.TranslatedDocument);
+                var scheduledEvent = meetingService.ScheduleMeeting(userAccessToken, meeting).Result;
             }
         }
     }

@@ -195,8 +195,10 @@ namespace MicrosoftGraph.Util
         /// <param name="subject">Name of the meeting</param>
         /// <param name="startTime">Starting time</param>
         /// <param name="endTime">End time</param>
+        /// <param name="originalDocumentLink">Link to the original document</param>
+        /// <param name="translatedDocumentLink">Link to the translated document</param> 
         /// <returns><see cref="Event" /></returns>
-        public static Event GetEvent(Room selectedRoom, string[] normalizedEmails, string subject, DateTime startTime, DateTime endTime)
+        public static Event GetEvent(Room selectedRoom, string[] normalizedEmails, string subject, DateTime startTime, DateTime endTime,  string originalDocumentLink = "", string translatedDocumentLink = "")
         {
             var attendees = normalizedEmails.Select(email => new Attendee
                 {
@@ -236,6 +238,24 @@ namespace MicrosoftGraph.Util
                 Attendees = attendees
             };
 
+            var stringBuilder = new StringBuilder();
+            stringBuilder.Append("<html>");
+            stringBuilder.Append("<body>");
+            stringBuilder.AppendLine(string.Format("Original document can be found <a href=\"{0}\">here</a>", originalDocumentLink));
+            stringBuilder.AppendLine("<br/>");
+            stringBuilder.AppendLine(string.Format("Translated document can be found <a href=\"{0}\">here</a>", translatedDocumentLink));
+            stringBuilder.AppendLine("<br/>");
+            stringBuilder.Append("</body>");
+            stringBuilder.Append("</html>");
+
+            var itemBody = new ItemBody
+            {
+                ContentType = BodyType.Html,
+                Content = stringBuilder.ToString()
+            };
+
+            meeting.Body = itemBody;
+
             return meeting;
         }
 
@@ -251,7 +271,7 @@ namespace MicrosoftGraph.Util
         {
             var formattedTime = counter.HasValue == false ? 
                 $"{startTime.AddHours(timeOffset):yyyy-MM-dd} -  {startTime.AddHours(timeOffset).ToShortTimeString()}  - {endTime.AddHours(9).ToShortTimeString()}" : 
-                $"<b>{counter}:</b> {startTime.AddHours(timeOffset):yyyy-MM-dd} -  {startTime.AddHours(timeOffset).ToShortTimeString()}  - {endTime.AddHours(9).ToShortTimeString()}";
+                $"{counter}: {startTime.AddHours(timeOffset):yyyy-MM-dd} -  {startTime.AddHours(timeOffset).ToShortTimeString()}  - {endTime.AddHours(9).ToShortTimeString()}";
             return formattedTime;
         }
 
@@ -374,6 +394,33 @@ namespace MicrosoftGraph.Util
             }
 
             return authenticationConfiguration;
+        }
+
+        /// <summary>
+        /// Returns meeting schedule suggestions
+        /// </summary>
+        /// <param name="meetingTimeSuggestion">Instance of <see cref="MeetingTimeSuggestionsResult"/></param>
+        /// <param name="roomsDictionary">Room dictionalry</param>
+        /// <returns>List of <see cref="List<MeetingSchedule>"/></returns>
+        public static List<MeetingSchedule> GetMeetingScheduleSuggestions(MeetingTimeSuggestionsResult meetingTimeSuggestion, Dictionary<string, string> roomsDictionary)
+        {
+            var meetingScheduleSuggestions = new List<MeetingSchedule>();
+            var counter = 1;
+            foreach (var suggestion in meetingTimeSuggestion.MeetingTimeSuggestions)
+            {
+                DateTime.TryParse(suggestion.MeetingTimeSlot.Start.DateTime, out DateTime startTime);
+                DateTime.TryParse(suggestion.MeetingTimeSlot.End.DateTime, out DateTime endTime);
+
+                meetingScheduleSuggestions.Add(new MeetingSchedule()
+                {
+                    StartTime = startTime,
+                    EndTime = endTime,
+                    Time = GetFormatedTime(startTime, endTime, counter++),
+                    Rooms = GetMeetingSuggestionRooms(suggestion, roomsDictionary)
+                });
+            }
+
+            return meetingScheduleSuggestions;
         }
     }
 }
