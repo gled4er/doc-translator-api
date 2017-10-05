@@ -135,8 +135,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authentication\AuthenticationHelper.cs" />
+    <Compile Include="DocumentManagement\Services\ConfigurationService.cs" />
+    <Compile Include="DocumentManagement\Services\DocumentManagementService.cs" />
+    <Compile Include="DocumentManagement\Services\IConfigurationService.cs" />
+    <Compile Include="DocumentManagement\Services\IDocumentManagementService.cs" />
+    <Compile Include="DocumentManagement\Model\DocumentLinks.cs" />
+    <Compile Include="DocumentManagement\Services\ISharePointManagementService.cs" />
+    <Compile Include="DocumentManagement\Services\IStorageManagementService.cs" />
+    <Compile Include="DocumentManagement\Services\SharePointManagementService.cs" />
+    <Compile Include="DocumentManagement\Services\StorageManagementService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\Helper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -159,5 +169,6 @@
       <Name>TranslationServices.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
