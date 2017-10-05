@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.WindowsAzure.Storage;
 using System.Configuration;
 using System.IO;
 using Microsoft.SharePoint.Client;
@@ -11,43 +10,67 @@ using TranslationAssistant.Business;
 using Autofac;
 using TestApp.DocumentManagement.Model;
 using TestApp.Utils;
+using MicrosoftGraph.Services;
+using System.Threading.Tasks;
 
 namespace TestApp.DocumentManagement.Services
 {
-    public class DocumentManagementService
+    /// <summary>
+    /// Service managing various files locally required for translating and referencing
+    /// </summary>
+    public class DocumentManagementService : IDocumentManagementService
     {
+        private readonly IStorageManagementService _storageManagementService;
+        private readonly IConfigurationService _configurationService;
+        private readonly ILoggingService _loggingService;
 
-        public static DocumentLinks TranslateFile(string storageContainerName, string storageFileName, string originalLanguage, string translationLanguage)
+
+        /// <summary>
+        /// Creates instance <see cref="DocumentManagementService"/>
+        /// </summary>
+        /// <param name="storageManagementService">Isntance of <see cref="IStorageManagementService"/></param>
+        /// <param name="configurationService">Instance of <see cref="IConfigurationService"/></param>
+        /// <param name="loggingService">Instance of <see cref="ILoggingService"/></param>
+        public DocumentManagementService(IStorageManagementService storageManagementService, IConfigurationService configurationService, ILoggingService loggingService)
         {
-            var storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
-            var blobClient = storageAccount.CreateCloudBlobClient();
-            var container = blobClient.GetContainerReference(storageContainerName);
-            container.CreateIfNotExists();
-            var blockBlob = container.GetBlockBlobReference(storageFileName);
-            // Copy File
-            blockBlob.DownloadToFile(blockBlob.Name, FileMode.Create);
+            _storageManagementService = storageManagementService;
+            _configurationService = configurationService;
+            _loggingService = loggingService;
+        }
+
+        /// <summary>
+        /// Tranlslates a document and provides links to the original as well as the translated document
+        /// </summary>
+        /// <param name="storageContainerName">Name of the storage container</param>
+        /// <param name="storageFileName">Name of the storage file (original document for translation)</param>
+        /// <param name="originalLanguage">The language of the originial file</param>
+        /// <param name="translationLanguage">The language for translating the document</param>
+        /// <returns></returns>
+        public  async Task<DocumentLinks> TranslateFile(string storageContainerName, string storageFileName, string originalLanguage, string translationLanguage)
+        {
+            var localFileName = await _storageManagementService.DownloadBlob(storageContainerName, storageFileName);
 
             // Translate File
-            TranslationServiceFacade.Initialize(ConfigurationManager.AppSettings["ApiKey"]);
+            TranslationServiceFacade.Initialize(_configurationService.GetSettingValue("ApiKey"));
 
-            DocumentTranslationManager.DoTranslation(blockBlob.Name, false, originalLanguage, translationLanguage);
+            DocumentTranslationManager.DoTranslation(localFileName, false, originalLanguage, translationLanguage);
 
             var languageCode = TranslationServiceFacade.AvailableLanguages.Where(p => p.Value == translationLanguage).Select(p => p.Key).FirstOrDefault();
 
             var extension = Helper.GetExtension(storageFileName);
 
-            var translatedDocumentName = blockBlob.Name.Replace(string.Format(".{0}", extension), string.Format(".{0}.{1}", languageCode, extension));
+            var translatedDocumentName = localFileName.Replace(string.Format(".{0}", extension), string.Format(".{0}.{1}", languageCode, extension));
 
             // Move original file to SharePoint
-            var originalFileUrl = CopyFileToSharePoint(blockBlob.Name);
+            var originalFileUrl = CopyFileToSharePoint(localFileName);
 
             // Move trnslated file to SharePoint
             var translatedFileUrl = CopyFileToSharePoint(translatedDocumentName);
 
             // Delete original file
-            if (System.IO.File.Exists(blockBlob.Name))
+            if (System.IO.File.Exists(localFileName))
             {
-                System.IO.File.Delete(blockBlob.Name);
+                System.IO.File.Delete(localFileName);
             }
 
             // Delete translated file
@@ -63,9 +86,8 @@ namespace TestApp.DocumentManagement.Services
             };
         }
 
-       
-
-        public static string CopyFileToSharePoint(string fileName)
+      
+        private  string CopyFileToSharePoint(string fileName)
         {
             if (System.IO.File.Exists(fileName))
             {
@@ -99,7 +121,7 @@ namespace TestApp.DocumentManagement.Services
             return string.Empty;
         }
 
-        private static void SaveBinaryDirect(ClientContext ctx, string libraryName, string fileName, Stream memoryStream)
+        private  void SaveBinaryDirect(ClientContext ctx, string libraryName, string fileName, Stream memoryStream)
         {
             Web web = ctx.Web;
             //Ensure that target library exists, create if is missing
@@ -117,7 +139,7 @@ namespace TestApp.DocumentManagement.Services
             Microsoft.SharePoint.Client.File.SaveBinaryDirect(ctx, string.Format("{0}/{1}", docs.RootFolder.ServerRelativeUrl, fileName, true), memoryStream, true);
         }
 
-        private static bool LibraryExists(ClientContext ctx, Web web, string libraryName)
+        private  bool LibraryExists(ClientContext ctx, Web web, string libraryName)
         {
             ListCollection lists = web.Lists;
             IEnumerable<List> results = ctx.LoadQuery<List>(lists.Where(list => list.Title == libraryName));
@@ -132,7 +154,7 @@ namespace TestApp.DocumentManagement.Services
             return false;
         }
 
-        private static void CreateLibrary(ClientContext ctx, Web web, string libraryName)
+        private  void CreateLibrary(ClientContext ctx, Web web, string libraryName)
         {
             // Create library to the web
             ListCreationInformation creationInfo = new ListCreationInformation();

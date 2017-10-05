@@ -18,7 +18,9 @@ namespace TestApp
 
             containerBuilder.Register<ILoggingService>(b => new LoggingService());
             containerBuilder.Register<IConfigurationService>(b => new ConfigurationService(b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IStorageManagementService>(b=>new StorageManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IHttpService>(b => new HttpService(b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IDocumentManagementService>(b=> new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IOutlookService>(b => new OutlookService(b.Resolve<IHttpService>(), b.Resolve<ITokenService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<ITokenService>(b => new TokenService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IRoomService>(b => new RoomService(b.Resolve<IOutlookService>(), b.Resolve<ILoggingService>()));
@@ -43,19 +45,17 @@ namespace TestApp
                 // using distributions list
                 // var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com,dl-leaders@smdocs.onmicrosoft.com", userAccessToken).Result;
                 var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com", userAccessToken).Result;
+
+                // Provide Meeting Slots options by date
+
+                // Select meeting slot and room
+
+                // Get document links
+                var documentManagementService = scope.Resolve<IDocumentManagementService>();
+                var documentLinks = documentManagementService.TranslateFile("documents", "AI05.pptx", "Japanese", "English").Result;
+
+                // Schedule meeting 
             }
-
-
-            // Provide Meeting Slots options by date
-
-            // Select meeting slot and room
-
-            // Get document links
-            var documentLinks = DocumentManagementService.TranslateFile("documents", "AI05.pptx", "Japanese", "English");
-
-            // Schedule meeting 
-
         }
-
     }
 }
