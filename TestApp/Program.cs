@@ -9,17 +9,48 @@ using System.Security;
 using TranslationAssistant.TranslationServices.Core;
 using TranslationAssistant.Business;
 using TestApp.Authentication;
+using Autofac;
+using MicrosoftGraph.Services;
 
 namespace TestApp
 {
     class Program
     {
+        private static IContainer Container { get; set; }
+
         static void Main(string[] args)
         {
-          
+
+            var containerBuilder = new ContainerBuilder();
+
+            #region Dependency Injection Setup 
+
+            containerBuilder.Register<ILoggingService>(b => new LoggingService());
+            containerBuilder.Register<IHttpService>(b => new HttpService(b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IOutlookService>(b => new OutlookService(b.Resolve<IHttpService>(), b.Resolve<ITokenService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<ITokenService>(b => new TokenService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IRoomService>(b => new RoomService(b.Resolve<IOutlookService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IGroupService>(b => new GroupService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IMeetingService>(b => new MeetingService(b.Resolve<IHttpService>(), b.Resolve<IOutlookService>(), b.Resolve<IRoomService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IPeopleService>(b => new PeopleService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IEmailService>(b => new EmailService(b.Resolve<IGroupService>(), b.Resolve<IPeopleService>(), b.Resolve<ILoggingService>()));
+            Container = containerBuilder.Build();
+
+            #endregion
+
             // Authenticate 
-            var userToken =  AuthenticationHelper.GetTokenForUser(ConfigurationManager.AppSettings["AADTenant"], ConfigurationManager.AppSettings["AADAppClientID"]).Result;
-            // Find People by name
+            var userAccessToken =  AuthenticationHelper.GetTokenForUser(ConfigurationManager.AppSettings["AADTenant"], ConfigurationManager.AppSettings["AADAppClientID"]).Result;
+
+            // Find emails by name
+
+            using (var scope = Container.BeginLifetimeScope())
+            {
+                var emailService = scope.Resolve<IEmailService>();
+                // using distributions list
+                // var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com,dl-leaders@smdocs.onmicrosoft.com", userAccessToken).Result;
+                var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com", userAccessToken).Result;
+            }
+
 
             // Provide Meeting Slots options by date
 
