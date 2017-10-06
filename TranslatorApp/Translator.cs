@@ -4,6 +4,7 @@ using Microsoft.Azure.WebJobs;
 using Autofac;
 using MicrosoftGraph.Services;
 using DocumentManagement.Services;
+using TranslatorApp.Model;
 
 namespace TranslatorApp
 {
@@ -13,9 +14,11 @@ namespace TranslatorApp
         public static async Task<List<string>> Run(
             [OrchestrationTrigger] DurableOrchestrationContext context)
         {
+
+            var request = context.GetInput<TranslatorRequest>();
             var outputs = new List<string>
             {
-                await context.CallFunctionAsync<string>("E1_SayHello", "Tokyo"),
+                await context.CallFunctionAsync<string>("E1_SayHello", request),
                 //await context.CallFunctionAsync<string>("E1_SayHello", "Seattle"),
                 //await context.CallFunctionAsync<string>("E1_SayHello", "London")
             };
@@ -26,7 +29,7 @@ namespace TranslatorApp
         }
 
         [FunctionName("E1_SayHello")]
-        public static string SayHello([ActivityTrigger] string name)
+        public static string SayHello([ActivityTrigger] TranslatorRequest request)
         {
 
             var containerBuilder = new ContainerBuilder();
@@ -53,7 +56,7 @@ namespace TranslatorApp
 
                 var documentManagementService = scope.Resolve<IDocumentManagementService>();
 
-                var documentLinks = documentManagementService.TranslateFile("documents", "AI05.pptx", "Japanese", "English").Result;
+                var documentLinks = documentManagementService.TranslateFile(request.ContainerName, request.FileName, request.OriginalLanguage, request.TranslationLanguage).Result;
 
                 result = string.Format("Original doc - {0}, translated doc - {1}", documentLinks.OriginalDocument, documentLinks.TranslatedDocument);
 
