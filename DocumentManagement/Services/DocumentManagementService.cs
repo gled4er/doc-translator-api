@@ -2,13 +2,12 @@
 using System.Linq;
 using TranslationAssistant.TranslationServices.Core;
 using TranslationAssistant.Business;
-using Autofac;
-using TestApp.DocumentManagement.Model;
-using TestApp.Utils;
+using DocumentManagement.Model;
+using DocumentManagement.Utils;
 using MicrosoftGraph.Services;
 using System.Threading.Tasks;
 
-namespace TestApp.DocumentManagement.Services
+namespace DocumentManagement.Services
 {
     /// <summary>
     /// Service managing various files locally required for translating and referencing

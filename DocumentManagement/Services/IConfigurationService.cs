@@ -1,4 +1,4 @@
-﻿namespace TestApp.DocumentManagement.Services
+﻿namespace DocumentManagement.Services
 {
     /// <summary>
     /// Configuration Service Interface

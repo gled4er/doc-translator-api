@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace TestApp.DocumentManagement.Services
+namespace DocumentManagement.Services
 {
     /// <summary>
     /// Storage Management Service Interface

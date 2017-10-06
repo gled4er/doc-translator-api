@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "TestApp\TestApp.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftGraph", "MicrosoftGraph\MicrosoftGraph.csproj", "{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentManagement", "DocumentManagement\DocumentManagement.csproj", "{5A270F5A-221C-4B78-8531-7F5078F6BC74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,12 +92,24 @@ Global
 		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|x86.ActiveCfg = Release|Any CPU
 		{81771CDB-E48C-4B0F-9F0B-BFAD08D36708}.Release|x86.Build.0 = Release|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Debug|x86.Build.0 = Debug|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|x86.ActiveCfg = Release|Any CPU
+		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45;packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 		SolutionGuid = {D90F6C56-D340-4CF4-8499-534F5BD94FFC}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.TransientFaultHandling.6.0.1304.0\lib\portable-net45+win+wp8;packages\EnterpriseLibrary.TransientFaultHandling.Data.6.0.1304.1\lib\NET45;packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45
 	EndGlobalSection
 EndGlobal

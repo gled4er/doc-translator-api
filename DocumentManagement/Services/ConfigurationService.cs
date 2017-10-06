@@ -2,7 +2,7 @@
 using System.Configuration;
 using MicrosoftGraph.Services;
 
-namespace TestApp.DocumentManagement.Services
+namespace DocumentManagement.Services
 {
     /// <summary>
     /// Configuration Service providing access to app settings 

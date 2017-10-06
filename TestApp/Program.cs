@@ -1,9 +1,9 @@
 ﻿using System;
 using TestApp.Authentication;
-using TestApp.DocumentManagement.Services;
 using Autofac;
 using MicrosoftGraph.Services;
 using MicrosoftGraph.Util;
+using DocumentManagement.Services;
 
 namespace TestApp
 {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MicrosoftGraph.Services;
 using Microsoft.WindowsAzure.Storage;
 
-namespace TestApp.DocumentManagement.Services
+namespace DocumentManagement.Services
 {
     /// <summary>
     /// Service for interacting with Azure Storage 
