@@ -10,22 +10,15 @@ namespace TranslatorApp
 {
     public static class HelloSequence
     {
-        [FunctionName("E1_HelloSequence")]
-        public static async Task<List<string>> Run(
+        [FunctionName("Translator")]
+        public static async Task<string> Run(
             [OrchestrationTrigger] DurableOrchestrationContext context)
         {
 
             var request = context.GetInput<TranslatorRequest>();
-            var outputs = new List<string>
-            {
-                await context.CallFunctionAsync<string>("E1_SayHello", request),
-                //await context.CallFunctionAsync<string>("E1_SayHello", "Seattle"),
-                //await context.CallFunctionAsync<string>("E1_SayHello", "London")
-            };
+            var output = await context.CallFunctionAsync<string>("E1_SayHello", request);
 
-
-            // returns ["Hello Tokyo!", "Hello Seattle!", "Hello London!"]
-            return outputs;
+            return output;
         }
 
         [FunctionName("E1_SayHello")]
