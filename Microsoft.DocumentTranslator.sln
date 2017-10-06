@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicrosoftGraph", "Microsoft
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocumentManagement", "DocumentManagement\DocumentManagement.csproj", "{5A270F5A-221C-4B78-8531-7F5078F6BC74}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TranslatorApp", "TranslatorApp\TranslatorApp.csproj", "{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,18 @@ Global
 		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|x86.ActiveCfg = Release|Any CPU
 		{5A270F5A-221C-4B78-8531-7F5078F6BC74}.Release|x86.Build.0 = Release|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Debug|x86.Build.0 = Debug|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Release|x86.ActiveCfg = Release|Any CPU
+		{8ED1A1C5-A390-4251-9F4C-6FB31949C33B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
