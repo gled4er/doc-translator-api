@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
-using TestApp.DocumentManagement.Model;
-namespace TestApp.DocumentManagement.Services
+using DocumentManagement.Model;
+namespace DocumentManagement.Services
 {
     public interface IDocumentManagementService
     {

@@ -1,4 +1,4 @@
-﻿namespace TestApp.DocumentManagement.Model
+﻿namespace DocumentManagement.Model
 {
     /// <summary>
     /// Object holding links to original and translated documents

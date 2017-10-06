@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace TestApp.Utils
+namespace DocumentManagement.Utils
 {
     public static class Helper
     {
@@ -17,6 +13,5 @@ namespace TestApp.Utils
             var valuesArray = fileName.Split(new[] { "." }, StringSplitOptions.None);
             return valuesArray[valuesArray.Length - 1];
         }
-
     }
 }

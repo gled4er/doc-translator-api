@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.SharePoint.Client;
 using MicrosoftGraph.Services;
 
-namespace TestApp.DocumentManagement.Services
+namespace DocumentManagement.Services
 {
     /// <summary>
     /// SharePoint Document Management Service

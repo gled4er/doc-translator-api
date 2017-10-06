@@ -1,9 +1,9 @@
 ﻿using System;
 using TestApp.Authentication;
-using TestApp.DocumentManagement.Services;
 using Autofac;
 using MicrosoftGraph.Services;
 using MicrosoftGraph.Util;
+using DocumentManagement.Services;
 
 namespace TestApp
 {
@@ -40,16 +40,30 @@ namespace TestApp
                 // Authenticate 
                 var userAccessToken =  AuthenticationHelper.GetTokenForUser(configurationService.GetSettingValue("AADTenant"), configurationService.GetSettingValue("AADAppClientID")).Result;
 
+                Console.WriteLine("Authentication Successful!");
+
                 // Find emails by name
                 var emailService = scope.Resolve<IEmailService>();
 
                 // using distributions list
                 var emails = emailService.GetEmails("Naomi Sato,jbrown@smdocs.onmicrosoft.com", userAccessToken).Result;
 
+                Console.WriteLine("Email retrieved");
+                foreach(var email in emails)
+                {
+                    Console.WriteLine(email);
+                }
+
                 // Provide Meeting Slots options by date
                 var roomsService = scope.Resolve<IRoomService>();
 
                 var rooms = roomsService.GetRooms(userAccessToken).Result;
+                Console.WriteLine("Rooms Retrieved");
+                foreach(var roomItem in rooms)
+                {
+                    Console.WriteLine(string.Format("{0}-{1}", roomItem.Name, roomItem.Address));
+                }
+
                 var roomsDictionary = DataConverter.GetRoomDictionary(rooms);
 
                 var meetingService = scope.Resolve<IMeetingService>();
@@ -59,7 +73,11 @@ namespace TestApp
                 var userFindMeetingTimesRequestBody = DataConverter.GetUserFindMeetingTimesRequestBody(date, emails.ToArray(), normalizedDuration: meetingDuration, isOrganizerOptional: false);
                 var meetingTimeSuggestion = meetingService.GetMeetingsTimeSuggestions(userAccessToken, userFindMeetingTimesRequestBody).Result;
                 var meetingScheduleSuggestions = DataConverter.GetMeetingScheduleSuggestions(meetingTimeSuggestion, roomsDictionary);
-
+                Console.WriteLine("Meeting suggestion retrieved");
+                foreach (var meetingSuggestion in meetingScheduleSuggestions)
+                {
+                    Console.WriteLine(meetingSuggestion.Time);
+                }
                 // Select meeting slot and room
                 var fileName = "AI05.pptx";
 
@@ -69,13 +87,25 @@ namespace TestApp
                 var roomIndex = randomNumberGenerator.Next(meetingScheduleSuggestions[slotIndex].Rooms.Count);
                 var room = slot.Rooms[roomIndex];
 
+                Console.WriteLine(string.Format("Selected slot - {0}", slot));
+                Console.WriteLine(string.Format("Selected room - {0}", room.Name));
+
                 // Get document links
                 var documentManagementService = scope.Resolve<IDocumentManagementService>();
+
+                Console.WriteLine("Translation from Japanese to English and uploading to Sharepoint for document {0} started", fileName);
+
                 var documentLinks = documentManagementService.TranslateFile("documents", fileName, "Japanese", "English").Result;
+
+                Console.WriteLine("Document {0} transalted from Japanese to English", fileName);
 
                 // Schedule meeting 
                 var meeting = DataConverter.GetEvent(room, emails.ToArray(), $"Discussion for document {fileName}", slot.StartTime, slot.EndTime, documentLinks.OriginalDocument, documentLinks.TranslatedDocument);
                 var scheduledEvent = meetingService.ScheduleMeeting(userAccessToken, meeting).Result;
+
+                Console.WriteLine("Meeting scheduled");
+
+                Console.ReadLine();
             }
         }
     }
