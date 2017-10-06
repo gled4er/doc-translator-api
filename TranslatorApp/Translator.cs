@@ -16,13 +16,13 @@ namespace TranslatorApp
         {
 
             var request = context.GetInput<TranslatorRequest>();
-            var output = await context.CallFunctionAsync<string>("E1_SayHello", request);
+            var output = await context.CallFunctionAsync<string>("DocumentTranslator", request);
 
             return output;
         }
 
-        [FunctionName("E1_SayHello")]
-        public static string SayHello([ActivityTrigger] TranslatorRequest request)
+        [FunctionName("DocumentTranslator")]
+        public static string DocumentTranslator([ActivityTrigger] TranslatorRequest request)
         {
 
             var containerBuilder = new ContainerBuilder();
