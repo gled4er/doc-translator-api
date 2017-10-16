@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Autofac;
 using MicrosoftGraph.Services;
@@ -27,31 +26,26 @@ namespace TranslatorApp
 
             var containerBuilder = new ContainerBuilder();
 
-            IContainer container = null;
-
             #region Dependency Injection Setup 
 
             containerBuilder.Register<ILoggingService>(b => new LoggingService());
-            containerBuilder.Register<IConfigurationService>(b => new ConfigurationService(b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IStorageManagementService>(b => new StorageManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
-            containerBuilder.Register<ISharePointManagementService>(b => new SharePointManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IStorageManagementService>(b => new StorageManagementService(b.Resolve<ILoggingService>()));
+            containerBuilder.Register<ISharePointManagementService>(b => new SharePointManagementService(b.Resolve<ILoggingService>()));
             containerBuilder.Register<IHttpService>(b => new HttpService(b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IDocumentManagementService>(b => new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<ISharePointManagementService>(), b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
-            container = containerBuilder.Build();
+            containerBuilder.Register<IDocumentManagementService>(b => new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<ISharePointManagementService>(), b.Resolve<ILoggingService>()));
+            var container = containerBuilder.Build();
 
             #endregion
 
-            var result = string.Empty;
+            string result;
 
             using (var scope = container.BeginLifetimeScope())
             {
-                var configurationService = scope.Resolve<IConfigurationService>();
-
                 var documentManagementService = scope.Resolve<IDocumentManagementService>();
 
-                var documentLinks = documentManagementService.TranslateFile(request.ContainerName, request.FileName, request.OriginalLanguage, request.TranslationLanguage).Result;
+                var documentLinks = documentManagementService.TranslateFile(request.ContainerName, request.FileName, request.OriginalLanguage, request.TranslationLanguage);
 
-                result = string.Format("Original doc - {0}, translated doc - {1}", documentLinks.OriginalDocument, documentLinks.TranslatedDocument);
+                result = $"Original doc - {documentLinks.OriginalDocument}, translated doc - {documentLinks.TranslatedDocument}";
 
             }
 

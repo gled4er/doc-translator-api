@@ -4,7 +4,8 @@ using Autofac;
 using MicrosoftGraph.Services;
 using MicrosoftGraph.Util;
 using DocumentManagement.Services;
-
+using System.Configuration;
+    
 namespace TestApp
 {
     class Program
@@ -19,11 +20,10 @@ namespace TestApp
             #region Dependency Injection Setup 
 
             containerBuilder.Register<ILoggingService>(b => new LoggingService());
-            containerBuilder.Register<IConfigurationService>(b => new ConfigurationService(b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IStorageManagementService>(b=>new StorageManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
-            containerBuilder.Register<ISharePointManagementService>(b => new SharePointManagementService(b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IStorageManagementService>(b=>new StorageManagementService(b.Resolve<ILoggingService>()));
+            containerBuilder.Register<ISharePointManagementService>(b => new SharePointManagementService(b.Resolve<ILoggingService>()));
             containerBuilder.Register<IHttpService>(b => new HttpService(b.Resolve<ILoggingService>()));
-            containerBuilder.Register<IDocumentManagementService>(b=> new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<ISharePointManagementService>(), b.Resolve<IConfigurationService>(), b.Resolve<ILoggingService>()));
+            containerBuilder.Register<IDocumentManagementService>(b=> new DocumentManagementService(b.Resolve<IStorageManagementService>(), b.Resolve<ISharePointManagementService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IRoomService>(b => new RoomService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IGroupService>(b => new GroupService(b.Resolve<IHttpService>(), b.Resolve<ILoggingService>()));
             containerBuilder.Register<IMeetingService>(b => new MeetingService(b.Resolve<IHttpService>(), b.Resolve<IRoomService>(), b.Resolve<ILoggingService>()));
@@ -35,10 +35,8 @@ namespace TestApp
 
             using (var scope = Container.BeginLifetimeScope())
             {
-                var configurationService = scope.Resolve<IConfigurationService>();
-
                 // Authenticate 
-                var userAccessToken =  AuthenticationHelper.GetTokenForUser(configurationService.GetSettingValue("AADTenant"), configurationService.GetSettingValue("AADAppClientID")).Result;
+                var userAccessToken =  AuthenticationHelper.GetTokenForUser(ConfigurationManager.AppSettings["AADTenant"], ConfigurationManager.AppSettings["AADAppClientID"]).Result;
 
                 Console.WriteLine("Authentication Successful!");
 
@@ -61,7 +59,7 @@ namespace TestApp
                 Console.WriteLine("Rooms Retrieved");
                 foreach(var roomItem in rooms)
                 {
-                    Console.WriteLine(string.Format("{0}-{1}", roomItem.Name, roomItem.Address));
+                    Console.WriteLine($"{roomItem.Name}-{roomItem.Address}");
                 }
 
                 var roomsDictionary = DataConverter.GetRoomDictionary(rooms);
@@ -87,17 +85,17 @@ namespace TestApp
                 var roomIndex = randomNumberGenerator.Next(meetingScheduleSuggestions[slotIndex].Rooms.Count);
                 var room = slot.Rooms[roomIndex];
 
-                Console.WriteLine(string.Format("Selected slot - {0}", slot));
-                Console.WriteLine(string.Format("Selected room - {0}", room.Name));
+                Console.WriteLine($"Selected slot - {slot}");
+                Console.WriteLine($"Selected room - {room.Name}");
 
                 // Get document links
                 var documentManagementService = scope.Resolve<IDocumentManagementService>();
 
-                Console.WriteLine("Translation from Japanese to English and uploading to Sharepoint for document {0} started", fileName);
+                Console.WriteLine("Translation from Japanese to English and uploading to SharePoint for document {0} started", fileName);
 
-                var documentLinks = documentManagementService.TranslateFile("documents", fileName, "Japanese", "English").Result;
+                var documentLinks = documentManagementService.TranslateFile("documents", fileName, "Japanese", "English");
 
-                Console.WriteLine("Document {0} transalted from Japanese to English", fileName);
+                Console.WriteLine("Document {0} translated from Japanese to English", fileName);
 
                 // Schedule meeting 
                 var meeting = DataConverter.GetEvent(room, emails.ToArray(), $"Discussion for document {fileName}", slot.StartTime, slot.EndTime, documentLinks.OriginalDocument, documentLinks.TranslatedDocument);

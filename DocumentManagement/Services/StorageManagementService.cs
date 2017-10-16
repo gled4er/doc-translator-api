@@ -13,16 +13,13 @@ namespace DocumentManagement.Services
     public class StorageManagementService : IStorageManagementService
     {
         private readonly ILoggingService _loggingService;
-        //private readonly IConfigurationService _configurationService;
 
         /// <summary>
         /// Constructor for <see cref="StorageManagementService"/>
         /// </summary>
-        /// <param name="configurationService">Instance of <see cref="IConfigurationService"/></param>
         /// <param name="loggingService"><Instance of <see cref="ILoggingService"/></param>
-        public StorageManagementService(IConfigurationService configurationService, ILoggingService loggingService)
+        public StorageManagementService(ILoggingService loggingService)
         {
-           // _configurationService = configurationService;
             _loggingService = loggingService;
         }
 
@@ -47,7 +44,7 @@ namespace DocumentManagement.Services
             catch(Exception ex)
             {
                 _loggingService.Error("Error in StorageManagementService.DownloadBlob", ex);
-                throw ex;
+                throw;
             }
         }
     }

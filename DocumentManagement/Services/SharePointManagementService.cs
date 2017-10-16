@@ -15,17 +15,15 @@ namespace DocumentManagement.Services
     public class SharePointManagementService : ISharePointManagementService
     {
 
-        //private readonly IConfigurationService _configurationService;
+        //private read only IConfigurationService _configurationService;
         private readonly ILoggingService _loggingService;
 
         /// <summary>
         /// Create an instance of <see cref="ISharePointManagementService"/>
         /// </summary>
-        /// <param name="configurationService">Instance of <see cref="IConfigurationService"/></param>
         /// <param name="loggingService">Instance of <see cref="ILoggingService"/></param>
-        public SharePointManagementService(IConfigurationService configurationService, ILoggingService loggingService)
+        public SharePointManagementService(ILoggingService loggingService)
         {
-          //  _configurationService = configurationService;
             _loggingService = loggingService;
         }
 
@@ -46,11 +44,11 @@ namespace DocumentManagement.Services
                         {
                             var passWord = new SecureString();
 
-                            foreach (char c in ConfigurationManager.AppSettings["SPPassword"].ToCharArray()) passWord.AppendChar(c);
+                            foreach (var c in ConfigurationManager.AppSettings["SPPassword"].ToCharArray()) passWord.AppendChar(c);
 
                             clientContext.Credentials = new SharePointOnlineCredentials(ConfigurationManager.AppSettings["SPUserName"], passWord);
 
-                            Web web = clientContext.Web;
+                            var web = clientContext.Web;
 
                             clientContext.Load(web);
 
@@ -78,14 +76,14 @@ namespace DocumentManagement.Services
 
         private void SaveBinaryDirect(ClientContext ctx, string libraryName, string fileName, Stream memoryStream)
         {
-            Web web = ctx.Web;
+            var web = ctx.Web;
             //Ensure that target library exists, create if is missing
             if (!LibraryExists(ctx, web, libraryName))
             {
                 CreateLibrary(ctx, web, libraryName);
             }
 
-            List docs = ctx.Web.Lists.GetByTitle(libraryName);
+            var docs = ctx.Web.Lists.GetByTitle(libraryName);
             ctx.Load(docs, l => l.RootFolder);
             // Get the information about the folder that will hold the file
             ctx.Load(docs.RootFolder, f => f.ServerRelativeUrl);
@@ -101,10 +99,10 @@ namespace DocumentManagement.Services
 
         private bool LibraryExists(ClientContext ctx, Web web, string libraryName)
         {
-            ListCollection lists = web.Lists;
-            IEnumerable<List> results = ctx.LoadQuery<List>(lists.Where(list => list.Title == libraryName));
+            var lists = web.Lists;
+            var results = ctx.LoadQuery(lists.Where(list => list.Title == libraryName));
             ctx.ExecuteQuery();
-            List existingList = results.FirstOrDefault();
+            var existingList = results.FirstOrDefault();
 
             if (existingList != null)
             {
@@ -117,12 +115,12 @@ namespace DocumentManagement.Services
         private void CreateLibrary(ClientContext ctx, Web web, string libraryName)
         {
             // Create library to the web
-            ListCreationInformation creationInfo = new ListCreationInformation
+            var creationInfo = new ListCreationInformation
             {
                 Title = libraryName,
                 TemplateType = (int)ListTemplateType.DocumentLibrary
             };
-            List list = web.Lists.Add(creationInfo);
+            web.Lists.Add(creationInfo);
             ctx.ExecuteQuery();
         }
     }

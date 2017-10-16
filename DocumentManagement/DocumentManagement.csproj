@@ -116,9 +116,7 @@
   <ItemGroup>
     <Compile Include="Model\DocumentLinks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ConfigurationService.cs" />
     <Compile Include="Services\DocumentManagementService.cs" />
-    <Compile Include="Services\IConfigurationService.cs" />
     <Compile Include="Services\IDocumentManagementService.cs" />
     <Compile Include="Services\ISharePointManagementService.cs" />
     <Compile Include="Services\IStorageManagementService.cs" />
