@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using TranslationAssistant.TranslationServices.Core;
 using TranslationAssistant.Business;
@@ -6,6 +7,7 @@ using DocumentManagement.Model;
 using DocumentManagement.Utils;
 using MicrosoftGraph.Services;
 using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
 
 namespace DocumentManagement.Services
 {
@@ -16,7 +18,7 @@ namespace DocumentManagement.Services
     {
         private readonly IStorageManagementService _storageManagementService;
         private readonly ISharePointManagementService _sharePointManagementService;
-        private readonly IConfigurationService _configurationService;
+       // private readonly IConfigurationService _configurationService;
         private readonly ILoggingService _loggingService;
 
 
@@ -31,7 +33,7 @@ namespace DocumentManagement.Services
         {
             _storageManagementService = storageManagementService;
             _sharePointManagementService = sharePointManagementService;
-            _configurationService = configurationService;
+           // _configurationService = configurationService;
             _loggingService = loggingService;
         }
 
@@ -45,37 +47,75 @@ namespace DocumentManagement.Services
         /// <returns></returns>
         public async Task<DocumentLinks> TranslateFile(string storageContainerName, string storageFileName, string originalLanguage, string translationLanguage)
         {
+            //try
+            //{
+            // string localFileName = $@"D:\home\site\wwwroot\{storageFileName}";
+            string localFileName = storageFileName;
+            //try
+            //{
+            //    localFileName = await _storageManagementService.DownloadBlob(storageContainerName, storageFileName);
+            //}
+            //catch (Exception ex)
+            //{
+            //    _loggingService.Error("Error in _storageManagementService.DownloadBlob", ex);
+            //    throw;
+            //}
+
             try
-            {
-                var localFileName = await _storageManagementService.DownloadBlob(storageContainerName, storageFileName);
-
-                // Translate File
-                TranslationServiceFacade.Initialize(_configurationService.GetSettingValue("ApiKey"));
-
-                DocumentTranslationManager.DoTranslation(localFileName, false, originalLanguage, translationLanguage);
-
-                var languageCode = TranslationServiceFacade.AvailableLanguages.Where(p => p.Value == translationLanguage).Select(p => p.Key).FirstOrDefault();
-
-                var extension = Helper.GetExtension(storageFileName);
-
-                var translatedDocumentName = localFileName.Replace(string.Format(".{0}", extension), string.Format(".{0}.{1}", languageCode, extension));
-
-                // Move original file to SharePoint
-                var originalFileUrl = _sharePointManagementService.CopyFileToSharePoint(localFileName);
-
-                // Move trnslated file to SharePoint
-                var translatedFileUrl = _sharePointManagementService.CopyFileToSharePoint(translatedDocumentName);
-
-                // Delete original file
-                if (System.IO.File.Exists(localFileName))
                 {
-                    System.IO.File.Delete(localFileName);
+                    // Translate File
+                    TranslationServiceFacade.Initialize(ConfigurationManager.AppSettings["ApiKey"]);
+
+                    DocumentTranslationManager.DoTranslation(localFileName, false, originalLanguage, translationLanguage);
+                }
+                catch (Exception ex)
+                {
+                    _loggingService.Error("Error in TranslationServiceFacade.Initialize or  DocumentTranslationManager.DoTranslation", ex);
+                    throw;
                 }
 
-                // Delete translated file
-                if (System.IO.File.Exists(translatedDocumentName))
+
+                string originalFileUrl;
+                string translatedFileUrl;
+                string translatedDocumentName;
+                try
                 {
-                    System.IO.File.Delete(translatedDocumentName);
+                    var languageCode = TranslationServiceFacade.AvailableLanguages.Where(p => p.Value == translationLanguage).Select(p => p.Key).FirstOrDefault();
+
+                    var extension = Helper.GetExtension(storageFileName);
+
+                    translatedDocumentName = localFileName.Replace(string.Format(".{0}", extension), string.Format(".{0}.{1}", languageCode, extension));
+
+                    // Move original file to SharePoint
+                    originalFileUrl = _sharePointManagementService.CopyFileToSharePoint(localFileName);
+
+                    // Move trnslated file to SharePoint
+                    translatedFileUrl = _sharePointManagementService.CopyFileToSharePoint(translatedDocumentName);
+                }
+                catch (Exception ex)
+                {
+                    _loggingService.Error("Error in TranslationServiceFacade.AvailableLanguages.Wher or  Helper.GetExtension or _sharePointManagementService.CopyFileToSharePoint", ex);
+                    throw;
+                }
+
+                try
+                {
+                    // Delete original file
+                    if (System.IO.File.Exists(localFileName))
+                    {
+                        System.IO.File.Delete(localFileName);
+                    }
+
+                    // Delete translated file
+                    if (System.IO.File.Exists(translatedDocumentName))
+                    {
+                        System.IO.File.Delete(translatedDocumentName);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _loggingService.Error("Error in System.IO.File.Exists or System.IO.File.Delete", ex);
+                    throw;
                 }
 
                 return new DocumentLinks
@@ -84,12 +124,13 @@ namespace DocumentManagement.Services
                     TranslatedDocument = translatedFileUrl
                 };
 
-            }
-            catch (Exception ex)
-            {
-                _loggingService.Error("Error in DocumentManagementService.TranslateFile", ex);
-                throw ex;
-            }
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    _loggingService.Error("Error in DocumentManagementService.TranslateFile", ex);
+            //    throw ex;
+            //}
         }
     }
 }

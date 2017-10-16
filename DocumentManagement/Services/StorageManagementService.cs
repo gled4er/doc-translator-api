@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Threading.Tasks;
 using MicrosoftGraph.Services;
@@ -12,7 +13,7 @@ namespace DocumentManagement.Services
     public class StorageManagementService : IStorageManagementService
     {
         private readonly ILoggingService _loggingService;
-        private readonly IConfigurationService _configurationService;
+        //private readonly IConfigurationService _configurationService;
 
         /// <summary>
         /// Constructor for <see cref="StorageManagementService"/>
@@ -21,7 +22,7 @@ namespace DocumentManagement.Services
         /// <param name="loggingService"><Instance of <see cref="ILoggingService"/></param>
         public StorageManagementService(IConfigurationService configurationService, ILoggingService loggingService)
         {
-            _configurationService = configurationService;
+           // _configurationService = configurationService;
             _loggingService = loggingService;
         }
 
@@ -35,7 +36,7 @@ namespace DocumentManagement.Services
         {
             try
             {
-                var storageAccount = CloudStorageAccount.Parse(_configurationService.GetSettingValue("StorageConnectionString"));
+                var storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings["StorageConnectionString"]);
                 var blobClient = storageAccount.CreateCloudBlobClient();
                 var container = blobClient.GetContainerReference(storageContainerName);
                 container.CreateIfNotExists();

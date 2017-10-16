@@ -227,11 +227,11 @@ namespace TranslationAssistant.TranslationServices.Core
         private static void LoadCredentials(string clientId)
         {
             _ClientID = clientId;
-            _CategoryID = Properties.Settings.Default.CategoryID;
-            _AppId = Properties.Settings.Default.AppId;
-            _EndPointAddress = Properties.Settings.Default.EndPointAddress;
-            _UseAdvancedSettings = Properties.Settings.Default.UseAdvancedSettings;
-            _Adv_CategoryId = Properties.Settings.Default.Adv_CategoryID;
+          //_CategoryID = Properties.Settings.Default.CategoryID;
+          //_AppId = Properties.Settings.Default.AppId;
+          //_EndPointAddress = Properties.Settings.Default.EndPointAddress;
+          //_UseAdvancedSettings = Properties.Settings.Default.UseAdvancedSettings;
+          //_Adv_CategoryId = Properties.Settings.Default.Adv_CategoryID;
         }
 
         /// <summary>
