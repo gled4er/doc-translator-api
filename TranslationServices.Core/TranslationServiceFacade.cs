@@ -235,20 +235,6 @@ namespace TranslationAssistant.TranslationServices.Core
         }
 
         /// <summary>
-        /// Saves credentials ClientID, clientSecret and categoryID to the personalized settings file.
-        /// </summary>
-        public static void SaveCredentials()
-        {
-            Properties.Settings.Default.ClientID = _ClientID;
-            Properties.Settings.Default.CategoryID = _CategoryID;
-            Properties.Settings.Default.AppId = _AppId;
-            Properties.Settings.Default.EndPointAddress = _EndPointAddress;
-            Properties.Settings.Default.UseAdvancedSettings = _UseAdvancedSettings;
-            Properties.Settings.Default.Adv_CategoryID = _Adv_CategoryId;
-            Properties.Settings.Default.Save();
-        }
-
-        /// <summary>
         /// Takes a single language name and returns the matching language code. OK to pass a language code.
         /// </summary>
         /// <param name="languagename"></param>
@@ -259,14 +245,11 @@ namespace TranslationAssistant.TranslationServices.Core
             {
                 return languagename;
             }
-            else if (AvailableLanguages.ContainsValue(languagename))
+            if (AvailableLanguages.ContainsValue(languagename))
             {
                 return AvailableLanguages.First(t => t.Value == languagename).Key;
             }
-            else
-            {
-                throw new ArgumentException(String.Format("LanguageNameToLanguageCode: Language name {0} not found.", languagename));
-            }
+            throw new ArgumentException($"LanguageNameToLanguageCode: Language name {languagename} not found.");
         }
 
         public static string LanguageCodeToLanguageName(string languagecode)
@@ -281,7 +264,7 @@ namespace TranslationAssistant.TranslationServices.Core
             }
             else
             {
-                throw new ArgumentException(String.Format("LanguageCodeToLanguageName: Language code {0} not found.", languagecode));
+                throw new ArgumentException($"LanguageCodeToLanguageName: Language code {languagecode} not found.");
             }
         }
 
@@ -296,9 +279,9 @@ namespace TranslationAssistant.TranslationServices.Core
         /// <returns></returns>
         public static string TranslateString(string text, string from, string to, string contentType)
         {
-            string[] texts = new string[1];
+            var texts = new string[1];
             texts[0] = text;
-            string[] results = TranslateArray(texts, from, to, contentType);
+            var results = TranslateArray(texts, from, to, contentType);
             return results[0];
         }
 
@@ -312,8 +295,8 @@ namespace TranslationAssistant.TranslationServices.Core
         /// <returns>Translated array elements</returns>
         public static string[] GetAlignments(string[] texts, string from, string to, ref string[] alignments)
         {
-            string fromCode = string.Empty;
-            string toCode = string.Empty;
+            var fromCode = string.Empty;
+            var toCode = string.Empty;
 
             if (from.ToLower() == "Auto-Detect".ToLower() || from == string.Empty)
             {
@@ -327,7 +310,7 @@ namespace TranslationAssistant.TranslationServices.Core
 
             toCode = LanguageNameToLanguageCode(to);
 
-            string headerValue = GetHeaderValue();
+            var headerValue = GetHeaderValue();
             var bind = new BasicHttpBinding
             {
                 Name = "BasicHttpBinding_LanguageService",
@@ -342,15 +325,17 @@ namespace TranslationAssistant.TranslationServices.Core
             };
 
             var epa = new EndpointAddress(_EndPointAddress + "/V2/soap.svc");
-            LanguageServiceClient client = new LanguageServiceClient(bind, epa);
+            var client = new LanguageServiceClient(bind, epa);
 
-            if (String.IsNullOrEmpty(toCode))
+            if (string.IsNullOrEmpty(toCode))
             {
                 toCode = "en";
             }
 
-            TranslateOptions options = new TranslateOptions();
-            options.Category = _CategoryID;
+            var options = new TranslateOptions
+            {
+                Category = _CategoryID
+            };
 
             try
             {

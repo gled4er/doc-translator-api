@@ -6,7 +6,6 @@ using TranslationAssistant.Business;
 using DocumentManagement.Model;
 using DocumentManagement.Utils;
 using MicrosoftGraph.Services;
-using System.Threading.Tasks;
 
 namespace DocumentManagement.Services
 {

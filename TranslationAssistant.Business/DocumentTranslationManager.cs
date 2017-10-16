@@ -65,205 +65,6 @@ namespace TranslationAssistant.Business
         #region Methods
 
         /// <summary>
-        ///     The close process.
-        /// </summary>
-        /// <param name="processLike">
-        ///     The process like.
-        /// </param>
-        private static void CloseProcess(string processLike)
-        {
-            Process[] ps = Process.GetProcesses();
-            foreach (Process p in ps)
-            {
-                if (p.ProcessName.Contains(processLike))
-                {
-                    p.Kill();
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                }
-            }
-        }
-
-        /// <summary>
-        ///     The convert to docx.
-        /// </summary>
-        /// <param name="fullPath">The full path.</param>
-        /// <param name="targetLanguage">The target language.</param>
-        /// <returns>
-        ///     The System.String.
-        /// </returns>
-        private static string ConvertToDocx(string fullPath, string targetLanguage)
-        {
-            LoggingManager.LogMessage("Converting the document " + fullPath + " from doc or pdf to docx.");
-            object nullvalue = Type.Missing;
-
-            //Microsoft.Office.Interop.Word.Application wordApp = (Microsoft.Office.Interop.Word.Application) 
-            //Activator.CreateInstance(Type.GetTypeFromCLSID(new Guid("000209FF-0000-0000-C000-000000000046")));
-            Microsoft.Office.Interop.Word.Application wordApp =
-                new Microsoft.Office.Interop.Word.Application
-                {
-                    Visible = false
-                };
-            object file2 = GetOutputDocumentFullName(fullPath, targetLanguage);
-            try
-            {
-                wordApp.Visible = false;
-                object filee = fullPath;
-                Document wordDoc = wordApp.Documents.Open(
-                    ref filee,
-                    nullvalue,
-                    Missing.Value,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue,
-                    nullvalue);
-
-                if (fullPath.ToLowerInvariant().EndsWith(".doc"))
-                {
-                    wordDoc.Convert();
-                }
-
-                wordDoc.SaveAs(
-                    ref file2,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue,
-                    ref nullvalue);
-                wordDoc.Close(ref nullvalue, nullvalue, nullvalue);
-            }
-            finally
-            {
-                // wordApp.Documents.Close(ref nullvalue, ref nullvalue, ref nullvalue);
-                wordApp.Quit(ref nullvalue, ref nullvalue, ref nullvalue);
-            }
-
-            LoggingManager.LogMessage("Converted the document " + fullPath + " from doc or pdf to docx.");
-            return file2.ToString();
-        }
-
-        /// <summary>
-        ///     The convert to pptx.
-        /// </summary>
-        /// <param name="fullPath">The full path.</param>
-        /// <param name="targetLanguage">The target language.</param>
-        /// <returns>
-        ///     The System.String.
-        /// </returns>
-        private static string ConvertToPptx(string fullPath, string targetLanguage)
-        {
-            LoggingManager.LogMessage("Converting the document " + fullPath + " from ppt to pptx.");
-            
-            object file2 = GetOutputDocumentFullName(fullPath, targetLanguage);
-            Microsoft.Office.Interop.PowerPoint.Application powerPointApp =
-                new Microsoft.Office.Interop.PowerPoint.Application();
-
-            try
-            {
-                Microsoft.Office.Interop.PowerPoint.Presentation presentation =
-                    powerPointApp.Presentations.Open(
-                        fullPath,
-                        MsoTriState.msoFalse,
-                        MsoTriState.msoFalse,
-                        MsoTriState.msoFalse);
-
-                presentation.SaveAs(
-                    file2.ToString(),
-                    Microsoft.Office.Interop.PowerPoint.PpSaveAsFileType.ppSaveAsDefault,
-                    MsoTriState.msoTriStateMixed);
-                presentation.Close();
-            }
-            finally
-            {
-                powerPointApp.Quit();
-            }
-
-            LoggingManager.LogMessage("Converted the document " + fullPath + " from ppt to pptx.");
-            return file2.ToString();
-        }
-
-        /// <summary>
-        ///     The convert to xlsx.
-        /// </summary>
-        /// <param name="fullPath">The full path.</param>
-        /// <param name="targetLanguage">The target language.</param>
-        /// <returns>
-        ///     The System.String.
-        /// </returns>
-        private static string ConvertToXlsx(string fullPath, string targetLanguage)
-        {
-            LoggingManager.LogMessage("Converting the document " + fullPath + " from xls to xlsx.");
-            
-            object file2 = GetOutputDocumentFullName(fullPath, targetLanguage);
-                Microsoft.Office.Interop.Excel.Application excelApp = new Microsoft.Office.Interop.Excel.Application
-                                                                          {
-                                                                              Visible = false
-                                                                          };
-            try
-            {
-
-                Microsoft.Office.Interop.Excel.Workbook eWorkbook = excelApp.Workbooks.Open(
-                    fullPath,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing);
-
-                eWorkbook.SaveAs(
-                    file2,
-                    Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Microsoft.Office.Interop.Excel.XlSaveAsAccessMode.xlNoChange,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing,
-                    Type.Missing);
-
-                eWorkbook.Close(false, Type.Missing, Type.Missing);
-            }
-            finally
-            {
-                excelApp.Quit();
-            }
-
-            LoggingManager.LogMessage("Converted the document " + fullPath + " from xls to xlsx.");
-            return file2.ToString();
-        }
-
-        /// <summary>
         ///     The do translation internal.
         /// </summary>
         /// <param name="fullNameForDocumentToProcess">The full name for document to process.</param>
@@ -328,24 +129,13 @@ namespace TranslationAssistant.Business
         /// <returns>All documents to process.</returns>
         private static List<string> GetAllDocumentsToProcess(string documentPath, string targetLanguage)
         {
-            List<string> allFiles = new List<string>();
+            var allFiles = new List<string>();
             File.Delete(GetOutputDocumentFullName(documentPath, targetLanguage));
             var outputDocumentName = GetOutputDocumentFullName(documentPath, targetLanguage);
 
-            if (documentPath.ToLowerInvariant().EndsWith(".doc") || documentPath.ToLowerInvariant().EndsWith(".pdf"))
+            if (documentPath.ToLowerInvariant().EndsWith(".pdf"))
             {
-                var convertedDocumentPath = ConvertToDocx(documentPath, targetLanguage);
-                allFiles.Add(convertedDocumentPath);
-            }
-            else if (documentPath.ToLowerInvariant().EndsWith(".ppt"))
-            {
-                var convertedDocumentPath = ConvertToPptx(documentPath, targetLanguage);
-                allFiles.Add(convertedDocumentPath);
-            }
-            else if (documentPath.ToLowerInvariant().EndsWith(".xls"))
-            {
-                var convertedDocumentPath = ConvertToXlsx(documentPath, targetLanguage);
-                allFiles.Add(convertedDocumentPath);
+                // TBD - add logic for dealing with pdf-s
             }
             else
             {
@@ -426,7 +216,7 @@ namespace TranslationAssistant.Business
         }
 
         /// <summary>
-        /// Create a CSV file with the aligment information as the third column. Original in 1st, translation in 2nd and alignment in 3rd column.
+        /// Create a CSV file with the alignment information as the third column. Original in 1st, translation in 2nd and alignment in 3rd column.
         /// Source document must be UTF-8 encoded text file. 
         /// </summary>
         /// <param name="fullNameForDocumentToProcess">Source document name</param>

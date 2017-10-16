@@ -24,6 +24,8 @@ namespace TranslatorApp
         public static string DocumentTranslator([ActivityTrigger] TranslatorRequest request)
         {
 
+            // TBD - validate extension for Office Documents to docx and similar or pdf
+
             var containerBuilder = new ContainerBuilder();
 
             #region Dependency Injection Setup 

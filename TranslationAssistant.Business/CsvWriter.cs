@@ -18,17 +18,16 @@ namespace TranslationAssistant.Business
         /// <param name="TmxFilename">TMX file name</param>
         public CsvWriter(string filename)
         {
-            this.CsvStream = new StreamWriter(filename, false, Encoding.UTF8);
+            CsvStream = new StreamWriter(filename, false, Encoding.UTF8);
             WriteHeader();
-            return;
         }
 
 
         public void WriteElement(string Element, XMLTranslationManager.Properties props)
         {
-            this.CsvStream.Write("\"{0}\",", CSVEncode(Element));
-            this.CsvStream.Write("\"{0}\",", CSVEncode(props.Type));
-            this.CsvStream.Write("\"{0}\"\n", CSVEncode(props.Disposition));
+            CsvStream.Write("\"{0}\",", CSVEncode(Element));
+            CsvStream.Write("\"{0}\",", CSVEncode(props.Type));
+            CsvStream.Write("\"{0}\"\n", CSVEncode(props.Disposition));
         }
 
         private string CSVEncode(string segment)
@@ -37,7 +36,7 @@ namespace TranslationAssistant.Business
             return segment;
         }
 
-        private string statusmessage(Disposition disposition)
+        private string Statusmessage(Disposition disposition)
         {
             switch (disposition)
             {
@@ -54,14 +53,14 @@ namespace TranslationAssistant.Business
 
         private void WriteHeader()
         {
-            this.CsvStream.WriteLine("\"Name\",\"Type\",\"Disposition\"");
+            CsvStream.WriteLine("\"Name\",\"Type\",\"Disposition\"");
         }
 
         public void Dispose()
         {
-            this.CsvStream.Flush();
-            this.CsvStream.Close();
-            this.CsvStream.Dispose();
+            CsvStream.Flush();
+            CsvStream.Close();
+            CsvStream.Dispose();
         }
     }
 }
